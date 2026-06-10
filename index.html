@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threadline</title>
+    <meta name="description" content="A living builder workspace — capture ideas, track projects, connect learnings.">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-left">
+            <h1 class="logo">Threadline</h1>
+            <span class="tagline">pick up any thread</span>
+        </div>
+        <div class="header-right">
+            <button class="btn btn-primary" id="new-idea-btn">+ New Idea</button>
+            <input type="search" class="search-input" id="search" placeholder="Search projects...">
+        </div>
+    </header>
+
+    <nav class="view-switcher">
+        <button class="view-btn active" data-view="stage">By Stage</button>
+        <button class="view-btn" data-view="category">By Category</button>
+        <button class="view-btn" data-view="recent">Recent Activity</button>
+        <button class="view-btn" data-view="pinned">Pinned</button>
+        <label class="hidden-toggle">
+            <input type="checkbox" id="show-hidden">
+            <span>Show hidden</span>
+        </label>
+    </nav>
+
+    <main class="board" id="board">
+        <!-- Dynamically rendered by JS -->
+    </main>
+
+    <!-- New Idea Modal -->
+    <dialog class="modal" id="new-idea-modal">
+        <form class="idea-form" id="idea-form">
+            <h2>Capture an idea</h2>
+            <label>
+                <span>What's the idea?</span>
+                <input type="text" name="name" required placeholder="Project name or working title">
+            </label>
+            <label>
+                <span>One-liner</span>
+                <input type="text" name="tagline" placeholder="What does it do in one sentence?">
+            </label>
+            <label>
+                <span>Category</span>
+                <select name="category">
+                    <option value="personal-tools">Personal Tools</option>
+                    <option value="family">Family</option>
+                    <option value="smb">SMB / Business</option>
+                    <option value="learning">Learning</option>
+                </select>
+            </label>
+            <label>
+                <span>Notes (optional)</span>
+                <textarea name="notes" rows="3" placeholder="Any context, links, or initial thoughts..."></textarea>
+            </label>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="cancel-idea">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save Idea</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
