@@ -33,6 +33,45 @@
             projects = JSON.parse(localStorage.getItem('threadline-ideas') || '[]');
         }
         render();
+        fetchLastUpdated();
+    }
+
+    // Fetch last updated dates from GitHub API
+    async function fetchLastUpdated() {
+        if (!sources.github) return;
+        try {
+            const res = await fetch(`https://api.github.com/users/${sources.github}/repos?per_page=100&sort=updated`);
+            if (!res.ok) return;
+            const repos = await res.json();
+            const repoMap = {};
+            repos.forEach(r => { repoMap[r.full_name.toLowerCase()] = r.pushed_at || r.updated_at; });
+
+            let updated = false;
+            projects.forEach(p => {
+                if (p.repo && repoMap[p.repo.toLowerCase()]) {
+                    p.lastUpdated = repoMap[p.repo.toLowerCase()];
+                    updated = true;
+                }
+            });
+            if (updated) render();
+        } catch (e) {
+            console.log('Failed to fetch last updated:', e.message);
+        }
+    }
+
+    // Format relative time
+    function timeAgo(dateStr) {
+        if (!dateStr) return '';
+        const now = new Date();
+        const date = new Date(dateStr);
+        const diffMs = now - date;
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        if (diffDays === 0) return 'today';
+        if (diffDays === 1) return 'yesterday';
+        if (diffDays < 7) return `${diffDays}d ago`;
+        if (diffDays < 30) return `${Math.floor(diffDays / 7)}w ago`;
+        if (diffDays < 365) return `${Math.floor(diffDays / 30)}mo ago`;
+        return `${Math.floor(diffDays / 365)}y ago`;
     }
 
     // Render based on current view
@@ -180,6 +219,7 @@
                 ${blockerHtml}
                 <div class="card-footer">
                     <span>${project.category || ''}</span>
+                    ${project.lastUpdated || project.createdAt ? `<span class="card-updated">${timeAgo(project.lastUpdated || project.createdAt)}</span>` : ''}
                     <span>${project.stage}</span>
                 </div>
             </div>

@@ -11,15 +11,20 @@
 - [ ] Basic responsive layout (works on phone)
 
 ## Phase 1: Living Dashboard (MVP)
-- [ ] Project cards with lifecycle stages (idea → validated → building → live → archived)
-- [ ] Multiple views: by stage, by category, by last activity
-- [ ] View toggle/switcher (let user pick their preferred home view)
+- [x] Project cards with lifecycle stages (idea → validated → building → live → archived)
+- [x] Multiple views: by stage, by category, by last activity
+- [x] View toggle/switcher (let user pick their preferred home view)
+- [x] Quick-add: "New Idea" button → minimal form (title + one-liner + category)
+- [x] Pin/unpin ideas to keep them visible
+- [x] Search/filter across all projects
+- [x] Collapsible stage/category sections
+- [x] Hide/show projects for focus
+- [x] GitHub repo discovery (auto-detect untracked repos)
+- [x] Tags system (searchable, rendered as pills)
+- [ ] Last updated indicator on cards (from GitHub API for repos, manual for others)
 - [ ] Project detail panel (click to expand: status, links, blockers, notes)
-- [ ] Quick-add: "New Idea" button → minimal form (title + one-liner + category)
-- [ ] Pin/unpin ideas to keep them visible
 - [ ] Manual status updates (drag or dropdown to change stage)
 - [ ] Last activity indicator (pulled from GitHub API — last commit date)
-- [ ] Search/filter across all projects
 
 ## Phase 2: Memory & Context
 - [ ] Blockers & waiting-on tracker per project (e.g., "TFN verification — waiting on Twilio")

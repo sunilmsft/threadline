@@ -415,6 +415,11 @@ body {
     color: var(--text-muted);
 }
 
+.card-updated {
+    font-size: 0.7rem;
+    opacity: 0.7;
+}
+
 .card-blockers {
     color: var(--danger);
     font-size: 0.8rem;
