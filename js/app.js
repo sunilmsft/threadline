@@ -63,15 +63,18 @@
     }
 
     function renderByStage(items) {
+        const collapsed = JSON.parse(localStorage.getItem('threadline-collapsed') || '[]');
         const stages = ['idea', 'validated', 'building', 'live', 'archived'];
         board.innerHTML = stages.map(stage => {
             const stageItems = items.filter(p => p.stage === stage);
             if (stageItems.length === 0 && stage === 'archived' && !searchQuery) {
                 return ''; // Hide empty archived unless searching
             }
+            const isCollapsed = collapsed.includes('stage-' + stage);
             return `
-                <section class="stage-group">
-                    <div class="stage-header">
+                <section class="stage-group ${isCollapsed ? 'collapsed' : ''}">
+                    <div class="stage-header" data-collapse-id="stage-${stage}">
+                        <span class="collapse-icon">${isCollapsed ? '▶' : '▼'}</span>
                         <span class="stage-dot ${stage}"></span>
                         <h2>${stage}</h2>
                         <span class="stage-count">${stageItems.length}</span>
@@ -85,12 +88,15 @@
     }
 
     function renderByCategory(items) {
+        const collapsed = JSON.parse(localStorage.getItem('threadline-collapsed') || '[]');
         const categories = [...new Set(items.map(p => p.category))].sort();
         board.innerHTML = categories.map(cat => {
             const catItems = items.filter(p => p.category === cat);
+            const isCollapsed = collapsed.includes('cat-' + cat);
             return `
-                <section class="stage-group">
-                    <div class="stage-header">
+                <section class="stage-group ${isCollapsed ? 'collapsed' : ''}">
+                    <div class="stage-header" data-collapse-id="cat-${cat}">
+                        <span class="collapse-icon">${isCollapsed ? '▶' : '▼'}</span>
                         <h2>${formatCategory(cat)}</h2>
                         <span class="stage-count">${catItems.length}</span>
                     </div>
@@ -194,6 +200,55 @@
         });
     });
 
+    // Event: Collapse/expand sections
+    board.addEventListener('click', (e) => {
+        const header = e.target.closest('.stage-header[data-collapse-id]');
+        if (header && !e.target.closest('.card-hide-btn') && !e.target.closest('.card-pin-btn')) {
+            const id = header.dataset.collapseId;
+            const collapsed = JSON.parse(localStorage.getItem('threadline-collapsed') || '[]');
+            const idx = collapsed.indexOf(id);
+            if (idx === -1) {
+                collapsed.push(id);
+            } else {
+                collapsed.splice(idx, 1);
+            }
+            localStorage.setItem('threadline-collapsed', JSON.stringify(collapsed));
+            render();
+            return;
+        }
+
+        // Handle hide button
+        if (e.target.classList.contains('card-hide-btn')) {
+            e.stopPropagation();
+            const id = e.target.dataset.id;
+            const hiddenIds = JSON.parse(localStorage.getItem('threadline-hidden') || '[]');
+            const idx = hiddenIds.indexOf(id);
+            if (idx === -1) {
+                hiddenIds.push(id);
+            } else {
+                hiddenIds.splice(idx, 1);
+            }
+            localStorage.setItem('threadline-hidden', JSON.stringify(hiddenIds));
+            render();
+            return;
+        }
+
+        // Handle pin button
+        if (e.target.classList.contains('card-pin-btn')) {
+            e.stopPropagation();
+            const id = e.target.dataset.id;
+            const project = projects.find(p => p.id === id);
+            if (project) {
+                project.pinned = !project.pinned;
+                const pinState = JSON.parse(localStorage.getItem('threadline-pins') || '{}');
+                pinState[id] = project.pinned;
+                localStorage.setItem('threadline-pins', JSON.stringify(pinState));
+                render();
+            }
+            return;
+        }
+    });
+
     // Event: Search
     searchInput.addEventListener('input', (e) => {
         searchQuery = e.target.value;
@@ -243,40 +298,6 @@
         ideaForm.reset();
         modal.close();
         render();
-    });
-
-    // Event: Card click (toggle pin for now, will expand to detail view later)
-    board.addEventListener('click', (e) => {
-        // Handle hide button
-        if (e.target.classList.contains('card-hide-btn')) {
-            e.stopPropagation();
-            const id = e.target.dataset.id;
-            const hiddenIds = JSON.parse(localStorage.getItem('threadline-hidden') || '[]');
-            const idx = hiddenIds.indexOf(id);
-            if (idx === -1) {
-                hiddenIds.push(id);
-            } else {
-                hiddenIds.splice(idx, 1);
-            }
-            localStorage.setItem('threadline-hidden', JSON.stringify(hiddenIds));
-            render();
-            return;
-        }
-
-        // Handle pin button
-        if (e.target.classList.contains('card-pin-btn')) {
-            e.stopPropagation();
-            const id = e.target.dataset.id;
-            const project = projects.find(p => p.id === id);
-            if (project) {
-                project.pinned = !project.pinned;
-                const pinState = JSON.parse(localStorage.getItem('threadline-pins') || '{}');
-                pinState[id] = project.pinned;
-                localStorage.setItem('threadline-pins', JSON.stringify(pinState));
-                render();
-            }
-            return;
-        }
     });
 
     // Restore pin state from localStorage

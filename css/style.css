@@ -175,6 +175,23 @@ body {
     gap: 0.75rem;
     padding-bottom: 0.5rem;
     border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+}
+
+.stage-header:hover {
+    opacity: 0.8;
+}
+
+.collapse-icon {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    width: 1rem;
+    text-align: center;
+}
+
+.stage-group.collapsed .cards-grid {
+    display: none;
 }
 
 .stage-header h2 {
