@@ -30,11 +30,17 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 1rem 2rem;
-    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.5rem;
     position: sticky;
     top: 0;
     background: var(--bg);
     z-index: 100;
+    flex-wrap: wrap;
+}
+
+.header .hero-text {
+    width: 100%;
+    margin-top: 0.5rem;
 }
 
 .header-left {
@@ -77,6 +83,17 @@ body {
 
 .search-input:focus {
     border-color: var(--accent);
+}
+
+.gh-link {
+    color: var(--text-muted);
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+.gh-link:hover {
+    color: var(--text);
 }
 
 /* Buttons */
@@ -152,6 +169,22 @@ body {
     background: var(--accent);
     color: white;
     border-color: var(--accent);
+}
+
+/* Hero */
+.hero-text {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    letter-spacing: 0.01em;
+}
+
+.hero-text strong {
+    color: var(--accent-hover);
+    font-weight: 700;
 }
 
 /* Board */
